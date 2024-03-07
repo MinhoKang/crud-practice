@@ -8,7 +8,6 @@ const baseURL = "http://test.nowz.me/api/v1/";
 const axiosInstance = axios.create({
   baseURL,
   headers: {
-    "Content-Type": "application/json",
     Authorization: `Bearer ${accessToken}`,
   },
 });
@@ -18,16 +17,19 @@ axiosInstance.interceptors.request.use(async (req) => {
     accessToken = localStorage.getItem("accessToken");
     req.headers.Authorization = `Bearer ${accessToken}`;
   }
-  const user = jwtDecode(accessToken);
-  const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
-  console.log("isExpired", isExpired);
-  if (!isExpired) return req;
-  const response = await axios.post(`${baseURL}refresh/`, {
-    refresh: refreshToken,
-  });
-  localStorage.setItem("accessToken", response.data.accessToken);
-
-  return req;
+  try {
+    const user = jwtDecode(accessToken);
+    const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
+    console.log("isExpired", isExpired);
+    if (!isExpired) return req;
+    const response = await axios.post(`${baseURL}refresh/`, {
+      refresh: refreshToken,
+    });
+    localStorage.setItem("accessToken", response.data.accessToken);
+  } catch (error) {
+    console.error(error);
+    return req;
+  }
 });
 
 export default axiosInstance;
