@@ -16,11 +16,12 @@ const Home = () => {
   };
   const onClick = async () => {
     const result = await login(email, password);
-    console.log(result);
-    const { accessToken, refreshToken, type } = result;
+    console.log("결과가가가가가", result);
+    const { accessToken, refreshToken, type, email: userEmail } = result;
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
     localStorage.setItem("type", type);
+    // localStorage.setItem("email", userEmail);
     navigate("/mypage");
   };
 

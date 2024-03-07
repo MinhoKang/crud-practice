@@ -1,5 +1,5 @@
 import axios from "axios";
-import api from "../utils/api";
+import axiosInstance from "../utils/api";
 
 // export const login = (email, password) => {
 //   return api
@@ -41,10 +41,18 @@ import api from "../utils/api";
 // };
 // 방법 3 => 성공
 
+// export const login = async (email, password) => {
+//   const result = await axios.post(`http://test.nowz.me/api/v1/login/`, {
+//     email,
+//     password,
+//   });
+//   return result.data.data;
+// };
 export const login = async (email, password) => {
-  const result = await axios.post(`http://test.nowz.me/api/v1/login/`, {
-    email,
-    password,
-  });
-  return result.data.data;
+  const response = await axiosInstance.post(`login/`, { email, password });
+  // const result = await axios.post(`http://test.nowz.me/api/v1/login/`, {
+  //   email,
+  //   password,
+  // });
+  return response.data.data;
 };

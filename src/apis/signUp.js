@@ -1,4 +1,5 @@
 import axios from "axios";
+import axiosInstance from "../utils/api";
 
 export const signUp = async (
   email,
@@ -10,7 +11,7 @@ export const signUp = async (
   isStudent
 ) => {
   try {
-    const result = await axios.post(`http://test.nowz.me/api/v1/users/`, {
+    const response = await axiosInstance.post(`users/`, {
       // body
       email,
       password,
@@ -22,7 +23,19 @@ export const signUp = async (
       },
       type: isStudent,
     });
-    return result.data;
+    // const result = await axios.post(`http://test.nowz.me/api/v1/users/`, {
+    //   // body
+    //   email,
+    //   password,
+    //   profile: {
+    //     name,
+    //     contact: phoneNumber,
+    //     birthDate: birthday,
+    //     gender,
+    //   },
+    //   type: isStudent,
+    // });
+    return response.data;
   } catch (error) {
     console.error(error);
     throw error;

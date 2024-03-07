@@ -1,23 +1,54 @@
 import axios from "axios";
 
-let accessToken = localStorage.getItem("accessToken")
-  ? JSON.parse(localStorage.getItem("accessToken"))
-  : null;
+let accessToken = localStorage.getItem("accessToken");
+let refreshToken = localStorage.getItem("refreshToken");
 
 export const tokenRefresh = async () => {
   try {
-    const result = await axios.post(`http://test.nowz.me/api/v1/login/`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+    const response = await axios.post(`http://test.nowz.me/api/v1/login/`, {
+      refreshToken,
     });
-    console.log(result);
-    return result;
+    console.log(response);
+    return response;
   } catch (error) {
     console.error(error);
     throw error;
   }
 };
+
+tokenRefresh.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const {
+      config,
+      response: { status },
+    } = error;
+    if (status === 401) {
+      if (error.response.data.message === "Unauthorized") {
+        const originRequest = config;
+        const response = await tokenRefresh();
+        if (response.status === 200) {
+          const newAccessToken = response.data.accessToken;
+          const newRefreshToken = response.data.refreshToken;
+          localStorage.setItem("accessToken", newAccessToken);
+          localStorage.setItem("refreshToken", newRefreshToken);
+          axios.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+          originRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return axios(originRequest);
+        } else if (response.status === 401) {
+          alert("로그인이 필요합니다.");
+          window.location.href = "/";
+        } else {
+          alert("다시 시도해주세요.");
+          window.location.href = "/";
+        }
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 // 요청 인터셉터 추가하기
 axios.interceptors.request.use(
