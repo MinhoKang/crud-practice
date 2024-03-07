@@ -1,8 +1,9 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import styled from "styled-components";
+import UserDetailModal from "./UserDetailModal";
 
 const UserCard = ({ user }) => {
+  const [isClicked, setIsClicked] = useState(false);
   return (
     <Container>
       <ul key={user?.userId}>
@@ -19,11 +20,12 @@ const UserCard = ({ user }) => {
       <Button
         user={user}
         onClick={() => {
-          console.log("userId", user?.userId);
+          setIsClicked(true);
         }}
       >
         유저 정보 수정
       </Button>
+      {isClicked && <UserDetailModal user={user} setIsClicked={setIsClicked} />}
     </Container>
   );
 };
@@ -36,7 +38,7 @@ const Container = styled.div`
   position: relative;
 `;
 
-const Button = styled(Link)`
+const Button = styled.button`
   cursor: pointer;
   background-color: black;
   color: white;
