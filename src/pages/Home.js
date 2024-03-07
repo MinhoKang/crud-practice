@@ -17,9 +17,10 @@ const Home = () => {
   const onClick = async () => {
     const result = await login(email, password);
     console.log(result);
-    const { accessToken, refreshToken } = result;
+    const { accessToken, refreshToken, type } = result;
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("type", type);
     navigate("/mypage");
   };
 
