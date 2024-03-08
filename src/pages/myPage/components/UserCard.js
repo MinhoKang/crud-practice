@@ -1,9 +1,18 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import UserDetailModal from "./UserDetailModal";
+import { removeUser } from "../../../apis/removeUser";
 
 const UserCard = ({ user }) => {
   const [isClicked, setIsClicked] = useState(false);
+  let accessToken = localStorage.getItem("accessToken");
+  const handleRemove = async () => {
+    const confirmed = window.confirm("정말 삭제하시겠습니까?");
+    if (confirmed) {
+      const result = await removeUser(user?.userId, accessToken);
+      console.log(result);
+    }
+  };
   return (
     <Container>
       <ul key={user?.userId}>
@@ -25,6 +34,7 @@ const UserCard = ({ user }) => {
       >
         유저 정보 수정
       </Button>
+      <DeleteButton onClick={handleRemove}>유저 삭제</DeleteButton>
       {isClicked && <UserDetailModal user={user} setIsClicked={setIsClicked} />}
     </Container>
   );
@@ -54,4 +64,14 @@ const Button = styled.button`
     background-color: aliceblue;
     color: black;
   }
+`;
+
+const DeleteButton = styled.button`
+  background-color: red;
+  color: white;
+  width: 150px;
+  padding: 10px;
+  text-align: center;
+  border-radius: 15px;
+  cursor: pointer;
 `;

@@ -5,6 +5,7 @@ import { editInfo } from "../../../apis/editInfo";
 
 const UserDetailModal = ({ user, setIsClicked }) => {
   const [userInfo, setUserInfo] = useState({});
+
   // 유저 정보 불러오기
   let accessToken = localStorage.getItem("accessToken");
   useEffect(() => {
@@ -16,9 +17,10 @@ const UserDetailModal = ({ user, setIsClicked }) => {
         console.error("Error occurred:", error);
       });
   }, []);
+
   // 유저 정보 수정하기
   // useEffect(() => {
-  //   editInfo(user?.userId, accessToken)
+  //   editInfo(user?.userId, accessToken, { ...userInfo })
   //     .then((data) => {
   //       console.log("qqqqqq", data);
   //     })
@@ -29,9 +31,68 @@ const UserDetailModal = ({ user, setIsClicked }) => {
 
   const [isEdit, setIsEdit] = useState(false);
   const handleEdit = () => {
+    const updatedUserInfo = {
+      ...userInfo,
+      profile: {
+        ...userInfo.profile,
+        name: name,
+        address: address,
+        birthDate: birthDate,
+        contact: contact,
+        gender: gender,
+      },
+      email: email,
+    };
+    console.log("updatedUserInfo", updatedUserInfo);
+    editInfo(user?.userId, accessToken, updatedUserInfo)
+      .then((data) => {
+        console.log("qqqqqq", data);
+        getUserInfo(user?.userId, accessToken)
+          .then((data) => {})
+          .catch((error) => {
+            console.error("Error occurred:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error occurred:", error);
+      });
     setIsEdit(!isEdit);
+
+    // alert("수정되었습니다.");
   };
-  const [changeActive, setChangeActive] = useState(user?.isActive);
+  const [changeActive, setChangeActive] = useState(userInfo.isActive);
+  console.log("object", userInfo);
+  // const [name, setName] = useForm(userInfo.name);
+  // const [address, setAddress] = useForm(userInfo.address);
+  // const [email, setEmail] = useForm(userInfo.email);
+  // const [birthDate, setBirthDate] = useForm(userInfo.birthDate);
+  // const [contact, setContact] = useForm(userInfo.contact);
+  // const [gender, setGender] = useForm(userInfo.gender);
+  // const [name, setName] = useState(userInfo?.profile?.name);
+  // const [address, setAddress] = useState(userInfo?.profile?.address);
+  // const [email, setEmail] = useState(userInfo?.email);
+  // const [birthDate, setBirthDate] = useState(userInfo?.profile?.birthDate);
+  // const [contact, setContact] = useState(userInfo?.profile?.contact);
+  // const [gender, setGender] = useState(userInfo?.profile?.gender);
+
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const [email, setEmail] = useState("");
+  const [birthDate, setBirthDate] = useState("");
+  const [contact, setContact] = useState("");
+  const [gender, setGender] = useState("");
+  const [isActive, setsetIsActive] = useState("");
+
+  useEffect(() => {
+    setName(userInfo?.profile?.name);
+    setAddress(userInfo?.profile?.address);
+    setEmail(userInfo?.email);
+    setBirthDate(userInfo?.profile?.birthDate);
+    setContact(userInfo?.profile?.contact);
+    setGender(userInfo?.profile?.gender);
+    setsetIsActive(userInfo?.isActive);
+  }, [userInfo]);
+
   return (
     <Container>
       <Content>
@@ -49,34 +110,49 @@ const UserDetailModal = ({ user, setIsClicked }) => {
               <li>전화번호: {userInfo?.profile?.contact}</li>
               <li>성별: {userInfo?.profile?.gender}</li>
               <li>
-                사용 가능 여부: {user?.isActive ? "사용 가능" : "승인 필요"}
+                사용 가능 여부: {userInfo?.isActive ? "사용 가능" : "승인 필요"}
               </li>
             </ul>
           ) : (
             <div>
               <div>
                 이름:
-                <input value={user?.profile?.name} />
+                <input value={name} onChange={(e) => setName(e.target.value)} />
               </div>
               <div>
                 주소:
-                <input value={user?.profile?.address} />
+                <input
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                />
               </div>
               <div>
                 이메일:
-                <input value={user?.email} />
+                <input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
               <div>
                 생일:
-                <input value={user?.profile?.birthDate} />
+                <input
+                  value={birthDate}
+                  onChange={(e) => setBirthDate(e.target.value)}
+                />
               </div>
               <div>
                 전화번호:
-                <input value={user?.profile?.contact} />
+                <input
+                  value={contact}
+                  onChange={(e) => setContact(e.target.value)}
+                />
               </div>
               <div>
                 성별:
-                <input value={user?.profile?.gender} />
+                <input
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                />
               </div>
               <div>
                 사용 가능 여부:
