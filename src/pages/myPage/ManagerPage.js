@@ -4,8 +4,8 @@ import UserCard from "./components/UserCard";
 
 const ManagerPage = () => {
   const [userList, setUserList] = useState([]);
+  let accessToken = localStorage.getItem("accessToken");
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
     const result = getUsersList(accessToken)
       .then((data) => {
         console.log("User list:", data);

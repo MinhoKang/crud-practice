@@ -1,3 +1,4 @@
 {
-  "emmet.triggerExpansionOnTab": false
+  "emmet.triggerExpansionOnTab": false,
+  "editor.fontFamily": "Victor Mono,Consolas, 'Courier New', monospace"
 }
