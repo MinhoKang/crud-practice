@@ -33,6 +33,7 @@ const UserDetailModal = ({ user, setIsClicked }) => {
   const handleEdit = () => {
     const updatedUserInfo = {
       ...userInfo,
+      isActive: isActive,
       profile: {
         ...userInfo.profile,
         name: name,
@@ -48,7 +49,9 @@ const UserDetailModal = ({ user, setIsClicked }) => {
       .then((data) => {
         console.log("qqqqqq", data);
         getUserInfo(user?.userId, accessToken)
-          .then((data) => {})
+          .then((data) => {
+            console.log("성공", data);
+          })
           .catch((error) => {
             console.error("Error occurred:", error);
           });
@@ -60,8 +63,6 @@ const UserDetailModal = ({ user, setIsClicked }) => {
 
     // alert("수정되었습니다.");
   };
-  const [changeActive, setChangeActive] = useState(userInfo.isActive);
-  console.log("object", userInfo);
   // const [name, setName] = useForm(userInfo.name);
   // const [address, setAddress] = useForm(userInfo.address);
   // const [email, setEmail] = useForm(userInfo.email);
@@ -81,7 +82,7 @@ const UserDetailModal = ({ user, setIsClicked }) => {
   const [birthDate, setBirthDate] = useState("");
   const [contact, setContact] = useState("");
   const [gender, setGender] = useState("");
-  const [isActive, setsetIsActive] = useState("");
+  const [isActive, setIsActive] = useState("");
 
   useEffect(() => {
     setName(userInfo?.profile?.name);
@@ -90,7 +91,7 @@ const UserDetailModal = ({ user, setIsClicked }) => {
     setBirthDate(userInfo?.profile?.birthDate);
     setContact(userInfo?.profile?.contact);
     setGender(userInfo?.profile?.gender);
-    setsetIsActive(userInfo?.isActive);
+    setIsActive(userInfo?.isActive);
   }, [userInfo]);
 
   return (
@@ -158,8 +159,8 @@ const UserDetailModal = ({ user, setIsClicked }) => {
                 사용 가능 여부:
                 <input
                   type="checkbox"
-                  checked={changeActive}
-                  onClick={() => setChangeActive(!changeActive)}
+                  checked={isActive}
+                  onClick={() => setIsActive(!isActive)}
                 />
               </div>
             </div>
