@@ -17,3 +17,4 @@ export const editInfo = async (userId, accessToken, updatedUserInfo) => {
     throw error;
   }
 };
+

@@ -5,13 +5,15 @@ import { editInfo } from "../../../apis/editInfo";
 
 const UserDetailModal = ({ user, setIsClicked }) => {
   const [userInfo, setUserInfo] = useState({});
-
+  const [editedUserInfo, setEditedUserInfo] = useState({});
+  console.log("유저인포포포포ㅗㅍ포ㅗ", userInfo);
   // 유저 정보 불러오기
   let accessToken = localStorage.getItem("accessToken");
   useEffect(() => {
     getUserInfo(user?.userId, accessToken)
       .then((data) => {
         setUserInfo(data);
+        setEditedUserInfo(data);
       })
       .catch((error) => {
         console.error("Error occurred:", error);
@@ -28,27 +30,61 @@ const UserDetailModal = ({ user, setIsClicked }) => {
   //       console.error("Error occurred:", error);
   //     });
   // }, []);
+  // const updatedUserInfo = {};
+  // const detectValueChange = (object) => {
+  //   return new Proxy(object, {
+  //     set: (target, property, value) => {
+  //       if (target[property] !== value) {
+  //         updatedUserInfo[property] = value;
+  //       }
+  //       target[property] = value;
+  //       return true;
+  //     },
+  //     get(target, property) {
+  //       if (property === "getChanges") {
+  //         return () => updatedUserInfo;
+  //       }
+  //       return target[property];
+  //     },
+  //   });
+  // };
+  // detectValueChange(userInfo);
+  // // const changes = userInfo.map((user) => user.detectValueChange(user));
+  // // console.log("cccccccccccc", changes);
+  // let trackedObject = detectValueChange(userInfo);
+  // console.log("변경 전:", trackedObject);
+  // trackedObject.profile.name = "바뀐 이름";
+  // console.log("변경 gngn:", trackedObject);
 
   const [isEdit, setIsEdit] = useState(false);
   const handleEdit = () => {
-    const updatedUserInfo = {
-      ...userInfo,
-      profile: {
-        ...userInfo.profile,
-        name: name,
-        address: address,
-        birthDate: birthDate,
-        contact: contact,
-        gender: gender,
-      },
-      email: email,
-    };
-    console.log("updatedUserInfo", updatedUserInfo);
-    editInfo(user?.userId, accessToken, updatedUserInfo)
+    // const updatedUserInfo = {
+    //   ...userInfo,
+    //   profile: {
+    //     ...userInfo.profile,
+    //     name: name,
+    //     address: address,
+    //     birthDate: birthDate,
+    //     contact: contact,
+    //     gender: gender,
+    //   },
+    //   email: email,
+    // };
+    // console.log("updatedUserInfo", updatedUserInfo);
+    // const handleInputChange = (e) => {
+    //   const { name, value } = e.target;
+    //   setEditedUserInfo((prev) => ({
+    //     ...prev,
+
+    //   }))
+    // }
+    editInfo(user?.userId, accessToken, editedValue)
       .then((data) => {
         console.log("qqqqqq", data);
         getUserInfo(user?.userId, accessToken)
-          .then((data) => {})
+          .then((data) => {
+            console.log("성돋공");
+          })
           .catch((error) => {
             console.error("Error occurred:", error);
           });
@@ -57,40 +93,104 @@ const UserDetailModal = ({ user, setIsClicked }) => {
         console.error("Error occurred:", error);
       });
     setIsEdit(!isEdit);
-
-    // alert("수정되었습니다.");
   };
-  const [changeActive, setChangeActive] = useState(userInfo.isActive);
   console.log("object", userInfo);
-  // const [name, setName] = useForm(userInfo.name);
-  // const [address, setAddress] = useForm(userInfo.address);
-  // const [email, setEmail] = useForm(userInfo.email);
-  // const [birthDate, setBirthDate] = useForm(userInfo.birthDate);
-  // const [contact, setContact] = useForm(userInfo.contact);
-  // const [gender, setGender] = useForm(userInfo.gender);
-  // const [name, setName] = useState(userInfo?.profile?.name);
-  // const [address, setAddress] = useState(userInfo?.profile?.address);
-  // const [email, setEmail] = useState(userInfo?.email);
-  // const [birthDate, setBirthDate] = useState(userInfo?.profile?.birthDate);
-  // const [contact, setContact] = useState(userInfo?.profile?.contact);
-  // const [gender, setGender] = useState(userInfo?.profile?.gender);
 
-  const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
-  const [email, setEmail] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const [contact, setContact] = useState("");
-  const [gender, setGender] = useState("");
-  const [isActive, setsetIsActive] = useState("");
+  // const [name, setName] = useState("");
+  // const [address, setAddress] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [birthDate, setBirthDate] = useState("");
+  // const [contact, setContact] = useState("");
+  // const [gender, setGender] = useState("");
+  // const [isActive, setIsActive] = useState("");
+
+  const [value, setValue] = useState({
+    profile: {
+      birthDate: "",
+      name: "",
+      contact: "",
+      address: "",
+      gender: "",
+    },
+    email: "",
+    isActive: "",
+  });
+
+  console.log("value", value);
+
+  const [editedValue, setEditedValue] = useState({
+    // profile: {
+    // birthDate: "",
+    // name: "",
+    // contact: "",
+    // address: "",
+    // gender: "",
+    // },
+    // email: "",
+    // isActive: "",
+  });
+  console.log("editedValue", editedValue);
+
+  // 변경된 값들을 추출하여 새로운 객체로 반환하는 함수
+  const extractChangedValues = (newValue, previousValue) => {
+    const changedValue = {};
+
+    // profile 객체 내의 각 키를 확인하며 변경된 값들을 추출
+    for (const key in newValue.profile) {
+      if (newValue.profile[key] !== previousValue.profile[key]) {
+        changedValue.profile = {
+          ...changedValue.profile,
+          [key]: newValue.profile[key],
+        };
+      }
+    }
+
+    // email 값이 변경되었는지 확인
+    if (newValue.email !== previousValue.email) {
+      changedValue.email = newValue.email;
+    }
+
+    // isActive 값이 변경되었는지 확인
+    if (newValue.isActive !== previousValue.isActive) {
+      changedValue.isActive = newValue.isActive;
+    }
+
+    return changedValue;
+  };
+
+  // value 객체가 변경될 때마다 호출되는 함수
+  const handleValueChange = (editedValue) => {
+    // 이전 값과 새로운 값 사이에서 변경된 값들을 추출
+    const changedValue = extractChangedValues(editedValue, value);
+
+    // 변경된 값들을 출력
+    console.log("changedValue", changedValue);
+    setIsEdit(!isEdit);
+  };
 
   useEffect(() => {
-    setName(userInfo?.profile?.name);
-    setAddress(userInfo?.profile?.address);
-    setEmail(userInfo?.email);
-    setBirthDate(userInfo?.profile?.birthDate);
-    setContact(userInfo?.profile?.contact);
-    setGender(userInfo?.profile?.gender);
-    setsetIsActive(userInfo?.isActive);
+    // setName(userInfo?.profile?.name);
+    // setAddress(userInfo?.profile?.address);
+    // setEmail(userInfo?.email);
+    // setBirthDate(userInfo?.profile?.birthDate);
+    // setContact(userInfo?.profile?.contact);
+    // setGender(userInfo?.profile?.gender);
+    // setIsActive(userInfo?.isActive);
+    value.profile.name = userInfo?.profile?.name;
+    value.profile.address = userInfo?.profile?.address;
+    value.profile.birthDate = userInfo?.profile?.birthDate;
+    value.profile.contact = userInfo?.profile?.contact;
+    value.profile.gender = userInfo?.profile?.gender;
+    value.email = userInfo?.email;
+    value.isActive = userInfo?.isActive;
+
+    // editedValue.profile.name = userInfo?.profile?.name;
+    // editedValue.profile.address = userInfo?.profile?.address;
+    // editedValue.profile.birthDate = userInfo?.profile?.birthDate;
+    // editedValue.profile.contact = userInfo?.profile?.contact;
+    // editedValue.profile.gender = userInfo?.profile?.gender;
+    // editedValue.email = userInfo?.email;
+    // editedValue.isActive = userInfo?.isActive;
   }, [userInfo]);
 
   return (
@@ -117,57 +217,119 @@ const UserDetailModal = ({ user, setIsClicked }) => {
             <div>
               <div>
                 이름:
-                <input value={name} onChange={(e) => setName(e.target.value)} />
+                <input
+                  defaultValue={value.profile.name}
+                  onChange={(e) =>
+                    setEditedValue({
+                      ...editedValue,
+                      profile: {
+                        ...editedValue.profile,
+                        name: e.target.value,
+                      },
+                    })
+                  }
+                />
               </div>
               <div>
                 주소:
                 <input
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
+                  defaultValue={value.profile.address}
+                  onChange={(e) =>
+                    setEditedValue({
+                      ...editedValue,
+                      profile: {
+                        ...editedValue.profile,
+                        address: e.target.value,
+                      },
+                    })
+                  }
                 />
               </div>
               <div>
                 이메일:
                 <input
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  defaultValue={value.email}
+                  onChange={(e) =>
+                    setEditedValue({
+                      ...editedValue,
+                      email: e.target.value,
+                      profile: {
+                        ...editedValue.profile,
+                      },
+                    })
+                  }
                 />
               </div>
               <div>
                 생일:
                 <input
-                  value={birthDate}
-                  onChange={(e) => setBirthDate(e.target.value)}
+                  defaultValue={value.profile.birthDate}
+                  onChange={(e) =>
+                    setEditedValue({
+                      ...editedValue,
+                      profile: {
+                        ...editedValue.profile,
+                        birthDate: e.target.value,
+                      },
+                    })
+                  }
                 />
               </div>
               <div>
                 전화번호:
                 <input
-                  value={contact}
-                  onChange={(e) => setContact(e.target.value)}
+                  defaultValue={value.profile.contact}
+                  onChange={(e) =>
+                    setEditedValue({
+                      ...editedValue,
+                      profile: {
+                        ...editedValue.profile,
+                        contact: e.target.value,
+                      },
+                    })
+                  }
                 />
               </div>
               <div>
                 성별:
                 <input
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
+                  defaultValue={value.profile.gender}
+                  onChange={(e) =>
+                    setEditedValue({
+                      ...editedValue,
+                      profile: {
+                        ...editedValue.profile,
+                        gender: e.target.value,
+                      },
+                    })
+                  }
                 />
               </div>
               <div>
                 사용 가능 여부:
                 <input
                   type="checkbox"
-                  checked={changeActive}
-                  onClick={() => setChangeActive(!changeActive)}
+                  defaultChecked={value.isActive}
+                  onClick={(e) =>
+                    setEditedValue({
+                      ...editedValue,
+                      isActive: e.target.checked,
+                      profile: {
+                        ...editedValue.profile,
+                      },
+                    })
+                  }
                 />
               </div>
             </div>
           )}
         </div>
-        <EditBtn onClick={handleEdit}>
-          {isEdit ? "저장하기" : "수정하기"}
-        </EditBtn>
+
+        {isEdit ? (
+          <EditBtn onClick={handleEdit}>저장하기</EditBtn>
+        ) : (
+          <EditBtn onClick={handleValueChange}>수정하기</EditBtn>
+        )}
       </Content>
       <CloseButton onClick={() => setIsClicked(false)}>X</CloseButton>
     </Container>
