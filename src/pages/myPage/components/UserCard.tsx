@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import UserDetailModal from "./UserDetailModal";
 import { removeUser } from "../../../apis/removeUser";
+import { UserListInfo } from "../../../types/types";
 
-const UserCard = ({ user }) => {
+const UserCard = ({ user }: { user: UserListInfo }) => {
   const [isClicked, setIsClicked] = useState(false);
-  let accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken") ?? "";
+
   const handleRemove = async () => {
     const confirmed = window.confirm("정말 삭제하시겠습니까?");
     if (confirmed) {
@@ -13,6 +15,7 @@ const UserCard = ({ user }) => {
       console.log(result);
     }
   };
+
   return (
     <Container>
       <ul key={user?.userId}>
@@ -24,10 +27,9 @@ const UserCard = ({ user }) => {
         <li>전화번호: {user?.profile?.contact}</li>
         <li>성별: {user?.profile?.gender === "male" ? "남자" : "여자"}</li>
         <li>등록일: {user?.profile?.registerDate}</li>
-        <li>직책: {user?.profile?.type === "manager" ? "매니저" : "학생"}</li>
+        <li>직책: {user?.type === "manager" ? "매니저" : "학생"}</li>
       </ul>
       <Button
-        user={user}
         onClick={() => {
           setIsClicked(true);
         }}

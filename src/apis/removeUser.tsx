@@ -1,13 +1,13 @@
 import axiosInstance from "../utils/api";
 
-export const getUserInfo = async (userId, accessToken) => {
+export const removeUser = async (userId: string, accessToken: string) => {
   try {
-    const response = await axiosInstance.get(`users/${userId}`, {
+    const response = await axiosInstance.delete(`users/${userId}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    return response.data.data;
+    return response;
   } catch (error) {
     console.error(error);
     throw error;

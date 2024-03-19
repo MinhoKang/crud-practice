@@ -3,12 +3,11 @@ import styled from "styled-components";
 import { getUserInfo } from "../../../apis/userInfo";
 import { editInfo } from "../../../apis/editInfo";
 
-const UserDetailModal = ({ user, setIsClicked }) => {
+const UserDetailModal = ({ setIsClicked, user }) => {
   const [userInfo, setUserInfo] = useState({});
   const [editedUserInfo, setEditedUserInfo] = useState({});
-  console.log("유저인포포포포ㅗㅍ포ㅗ", userInfo);
   // 유저 정보 불러오기
-  let accessToken = localStorage.getItem("accessToken");
+  let accessToken = localStorage.getItem("accessToken") ?? "";
   useEffect(() => {
     getUserInfo(user?.userId, accessToken)
       .then((data) => {
@@ -82,9 +81,7 @@ const UserDetailModal = ({ user, setIsClicked }) => {
       .then((data) => {
         console.log("qqqqqq", data);
         getUserInfo(user?.userId, accessToken)
-          .then((data) => {
-            console.log("성돋공");
-          })
+          .then((data) => {})
           .catch((error) => {
             console.error("Error occurred:", error);
           });

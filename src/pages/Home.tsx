@@ -8,21 +8,22 @@ const Home = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const onChangeEmail = (e) => {
+  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
-  const onChangePassword = (e) => {
+  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
   const onClick = async () => {
     const result = await login(email, password);
-    console.log("결과가가가가가", result);
     const { accessToken, refreshToken, type, email: userEmail } = result;
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
     localStorage.setItem("type", type);
-    // localStorage.setItem("email", userEmail);
+    console.log("login token", accessToken);
     navigate("/mypage");
+    localStorage.setItem("email", email);
+    localStorage.setItem("password", password);
   };
 
   return (

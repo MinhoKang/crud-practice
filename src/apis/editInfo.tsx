@@ -1,6 +1,11 @@
+import { UpdatedUserInfo } from "../types/types";
 import axiosInstance from "../utils/api";
 
-export const editInfo = async (userId, accessToken, updatedUserInfo) => {
+export const editInfo = async (
+  userId: string,
+  accessToken: string,
+  updatedUserInfo: UpdatedUserInfo
+) => {
   try {
     const response = await axiosInstance.put(
       `users/${userId}/`,
@@ -17,4 +22,3 @@ export const editInfo = async (userId, accessToken, updatedUserInfo) => {
     throw error;
   }
 };
-

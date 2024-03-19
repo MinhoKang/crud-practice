@@ -4,20 +4,52 @@ import UserCard from "./components/UserCard";
 
 const ManagerPage = () => {
   const [userList, setUserList] = useState([]);
-  let accessToken = localStorage.getItem("accessToken");
+
+  const fetchUserList = async () => {
+    try {
+      const {
+        data: {
+          data: { results },
+        },
+      } = await getUsersList();
+
+      console.log("userList data: ", results);
+      setUserList(results);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
-    const result = getUsersList(accessToken)
-      .then((data) => {
-        console.log("User list:", data);
-        setUserList(data);
-      })
-      .catch((error) => {
-        console.error("Error occurred:", error);
-      });
-    console.log(result);
+    fetchUserList();
   }, []);
+  // axiosInstance.interceptors.request.use(async (req) => {
+  //   if (!accessToken) {
+  //     accessToken = localStorage.getItem("accessToken");
+  //     req.headers.Authorization = `Bearer ${accessToken}`;
+  //     console.log("!!accessToken");
+  //   }
+  //   try {
+  //     const user = jwtDecode(accessToken);
+  //     const isExpired = dayjs.unix(user.exp).diff(dayjs()) < 1;
+  //     console.log("isExpired", isExpired);
+  //     if (!isExpired) return req;
+  //     console.log("시도중........");
+  //     const response = await axios.post(`${baseURL}refresh/`, {
+  //       refresh: refreshToken,
+  //     });
+  //     localStorage.setItem("accessToken", response.data.accessToken);
+  //   } catch (error) {
+  //     console.error(error);
+  //     console.log("에러발생");
+  //     return req;
+  //   }
+  // });
+  if (!userList) return <div>로딩중...</div>;
+
   return (
     <div>
+      <button onClick={fetchUserList}>유저정보 새로 가져오기</button>
       <h2>Manager Page</h2>
       <div>
         현재 학생 수 <span>{userList.length}명</span>

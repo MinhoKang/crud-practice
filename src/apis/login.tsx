@@ -1,6 +1,19 @@
 import axios from "axios";
 import axiosInstance from "../utils/api";
 
+export const login = async (email: string, password: string) => {
+  const response = await axios.post(`http://test.nowz.me/api/v1/login/`, {
+    email,
+    password,
+  });
+  // const result = await axios.post(`http://test.nowz.me/api/v1/login/`, {
+  //   email,
+  //   password,
+  // });
+  console.log("login success", response);
+  return response.data.data;
+};
+
 // export const login = (email, password) => {
 //   return api
 //     .post(`login/`, { email, password })
@@ -48,11 +61,3 @@ import axiosInstance from "../utils/api";
 //   });
 //   return result.data.data;
 // };
-export const login = async (email, password) => {
-  const response = await axiosInstance.post(`login/`, { email, password });
-  // const result = await axios.post(`http://test.nowz.me/api/v1/login/`, {
-  //   email,
-  //   password,
-  // });
-  return response.data.data;
-};

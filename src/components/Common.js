@@ -7,7 +7,7 @@ export const Wrapper = styled.div`
   flex-direction: column;
   background-color: gray;
 `;
-export const Inputs = styled.div`
+export const Inputs = styled.form`
   display: flex;
   align-items: center;
   flex-direction: column;

@@ -2,13 +2,13 @@ import axios from "axios";
 import axiosInstance from "../utils/api";
 
 export const signUp = async (
-  email,
-  password,
-  name,
-  phoneNumber,
-  birthday,
-  gender,
-  isStudent
+  email: string,
+  password: string,
+  name: string,
+  phoneNumber: string,
+  birthday: string,
+  gender: string,
+  isStudent: boolean
 ) => {
   try {
     const response = await axiosInstance.post(`users/`, {
